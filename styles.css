@@ -63,10 +63,10 @@ section {
 }
 
 /* Awards section */
+
 .awards {
   min-height: 100vh;
   height: max-content;
-  padding: 6rem 1rem 2rem 1rem;
 }
 
 .awards p {
@@ -75,9 +75,6 @@ section {
 
 .awards-list {
   border-top: 1px solid #000;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .award {
@@ -332,6 +329,14 @@ canvas {
     flex-direction: column;
     align-items: flex-start;
     gap: 1.5rem;
+  }
+
+  .model{
+    visibility: hidden;
+  }
+
+  canvas {
+    visibility: hidden;
   }
   
   .award-name h1,
