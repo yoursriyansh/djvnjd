@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="Shunya Byte - Cloud Solutions for Modern Business" />
+    <title>Shunya Byte | Cloud Solutions</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/lenis@1.1.16/dist/lenis.min.js"></script>
+    <script src="https://unpkg.com/split-type"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  </head>
+  <body>
+    <div class="model"></div>
+
+    <nav>
+      <p><img class="logo" src="assets/Black logo no bg.png" alt="Shunya Byte Logo"></p>
+      <a href="#contact">Contact Us</a>
+    </nav>
+
+    <section class="intro">
+      <div class="header-row">
+        <h1 class="title">SHUNYA</h1>
+      </div>
+      <div class="header-row">
+        <h1 class="title">Byte</h1>
+        <p><span>{ABOUT US}</span><br><br>
+          The cloud revolution is here, and businesses need to adapt, innovate, and scale faster than ever. At Shunya Byte, we provide cutting-edge cloud solutions designed to help businesses stay ahead of the competition with security, automation, and AI-driven optimization.
+        </p>
+      </div>
+      <div class="header-row">
+        <h1 class="tagline">The Origin of Truth and Technology </h1>
+      </div>
+    </section>
+    
+    <section class="awards">
+      <p>Our Services</p>
+      <div class="awards-list"></div>
+    </section>
+    
+    <div class="award-preview"></div>
+    
+    <section class="footer" id="contact">
+      <div class="email">shunyabyte@gmail.com</div>
+      <div class="face">
+        <span class="cheek" data-part="cheek-left"> ( </span>
+        <span class="eye" data-part="eye-left"> ͡°</span>
+        <span class="mouth" data-part="mouth"> ͜ʖ </span>
+        <span class="eye" data-part="eye-right"> ͡°</span>
+        <span class="cheek" data-part="cheek-right"> ) </span>
+      </div>
+      <div class="form-container left-cheek">
+        <input type="email" placeholder="Your Email" required style="background: rgba(0, 0, 0, 0.1); backdrop-filter: blur(10px); color: white;">
+      </div>
+      <div class="form-container right-cheek">
+        <input type="text" placeholder="Your Message" style="background: rgba(0, 0, 0, 0.1); backdrop-filter: blur(10px); color: white;">
+        <button type="button" onclick="alert('Message Sent!')" style="background: rgba(0, 0, 0, 0.1); backdrop-filter: blur(10px); color: white;">Send Message</button>
+      </div>
+    </section>
+
+    <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script type="module" src="./script.js"></script>
+    
+    <!-- Face animation script -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const face = document.querySelector(".face");
+        const parts = document.querySelectorAll(".face span");
+        
+        const handleFaceAnimation = (e) => {
+          const bounding = face.getBoundingClientRect();
+          
+          parts.forEach(part => {
+            if (e.target.classList.contains("cheek") && !part.classList.contains("cheek")) {
+              return;
+            }
+            
+            const partBounding = part.getBoundingClientRect();
+            const partCenterX = partBounding.left + partBounding.width / 2;
+            const partCenterY = partBounding.top + partBounding.height / 2;
+            
+            let deltaX = partCenterX - e.clientX;
+            let deltaY = partCenterY - e.clientY;
+            let distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            let maxDistance = Math.min(100, window.innerWidth * 0.15);
+            let moveFactor = Math.min(1, maxDistance / Math.max(1, distance));
+            
+            gsap.to(part, { 
+              x: deltaX * moveFactor * 0.5, 
+              y: deltaY * moveFactor * 0.5, 
+              rotation: deltaX * 0.03, 
+              duration: 0.5, 
+              ease: "power2.out" 
+            });
+          });
+        };
+
+        const resetFaceAnimation = () => {
+          parts.forEach(part => {
+            gsap.to(part, { x: 0, y: 0, rotation: 0, duration: 0.7, ease: "power2.out" });
+          });
+        };
+        
+        // Check if we're on mobile
+        const isMobile = window.matchMedia("(max-width: 768px)").matches;
+        
+        if (!isMobile) {
+          face.addEventListener("mousemove", handleFaceAnimation);
+          face.addEventListener("mouseleave", resetFaceAnimation);
+        } else {
+          // For mobile, use touch events instead
+          face.addEventListener("touchmove", (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            handleFaceAnimation({
+              clientX: touch.clientX,
+              clientY: touch.clientY,
+              target: document.elementFromPoint(touch.clientX, touch.clientY)
+            });
+          });
+          
+          face.addEventListener("touchend", resetFaceAnimation);
+        }
+        
+        // Handle resize events
+        window.addEventListener('resize', () => {
+          const isMobileNow = window.matchMedia("(max-width: 768px)").matches;
+          
+          if (isMobileNow !== isMobile) {
+            // Reset all animations
+            resetFaceAnimation();
+            
+            // Reload the page to reinitialize everything correctly
+            // Only do this if the layout significantly changes (desktop to mobile or vice versa)
+            window.location.reload();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
