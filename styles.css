@@ -386,15 +386,20 @@ canvas {
   
   nav {
     padding: 0.8rem;
-    width: 100%;
+    width: 100vw;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
   
   nav a {
-    visibility: hidden;
-
+    font-size: 14px;
+    padding: 6px 10px;
+    max-width: 100px;
+    text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-left: auto;
   }
   
   .logo {
@@ -461,7 +466,9 @@ canvas {
   }
   
   nav a {
-    visibility: hidden;
+    font-size: 12px;
+    padding: 5px 8px;
+    max-width: 80px;
   }
   
   .logo {
