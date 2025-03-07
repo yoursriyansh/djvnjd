@@ -417,7 +417,7 @@ canvas {
   }
 
   canvas {
-    visibility: hidden;
+    display: none;
   }
   
   .award-name h1,
