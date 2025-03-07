@@ -641,6 +641,7 @@ function throttle(func, limit) {
   };
 }
 
+
 document.addEventListener('DOMContentLoaded', function() {
   const emailElement = document.getElementById('emailElement');
   const copyIndicator = document.getElementById('copyIndicator');
