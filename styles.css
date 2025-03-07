@@ -8,6 +8,7 @@ body {
   background-color: #e3e3db;
   overflow-x: hidden;
   font-family: 'Base Neue';
+
 }
 
 html {
@@ -19,22 +20,19 @@ html {
   font-style: normal;
   font-weight: normal;
   src: url('assets/OffBitTrial-101Bold.woff') format('woff');
-  font-display: swap;
-}
+  }
 
-@font-face {
-  font-family: 'Base Neue';
-  src: url('assets/BaseNeue-Medium.ttf');
-  font-display: swap;
-}
+  @font-face {
+    font-family: 'Base Neue';
+    src: url('assets/BaseNeue-Medium.ttf');
+    }
 
-@font-face {
-  font-family: 'OffBit Trial Regular';
-  font-style: normal;
-  font-weight: normal;
-  src: url('assets/OffBitTrial-Regular.woff') format('woff');
-  font-display: swap;
-}
+  @font-face {
+    font-family: 'OffBit Trial Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: url('assets/OffBitTrial-Regular.woff') format('woff');
+    }
 
 
 /* Scrollbar styling */
@@ -73,8 +71,8 @@ p {
 .title{
   font-family: 'OffBit Trial Bold';
   color: #0A0A0A;
-}
 
+}
 /* Section container */
 section {
   position: relative;
@@ -90,9 +88,11 @@ section {
   align-items: center;
   flex-direction: column;
   padding: 2rem;
+
 }
 
 /* Awards section */
+
 .awards {
   min-height: 100vh;
   height: max-content;
@@ -101,6 +101,7 @@ section {
 .awards p {
   padding: 5px 20px;
   font-family: 'OffBit Trial Regular';
+
 }
 
 .awards-list {
@@ -179,6 +180,7 @@ a,
 .header-row p span {
     font-family: 'OffBit Trial Regular';
     font-size: clamp(18px, 2vw, 24px);
+    
 }
 
 /* 3D model container */
@@ -202,6 +204,8 @@ nav {
   align-items: center;
   z-index: 100;
   mix-blend-mode: difference !important;
+  
+
 }
 
 nav a {
@@ -209,6 +213,7 @@ nav a {
   font-family: 'OffBit Trial Regular';
   mix-blend-mode: difference !important;
   color: #e3e3db;
+
 }
 
 /* Intro section */
@@ -260,7 +265,8 @@ nav a {
 .bottom-social-links a {
   display: inline-block;
   transition: transform 0.3s ease;
-  z-index: 999;
+    z-index: 999;
+
 }
 
 .bottom-social-links a:hover {
@@ -274,12 +280,15 @@ nav a {
   cursor: pointer;
 }
 
+
+
 .email {
   position: absolute;
   top: 20px;
   left: 20px;
   font-size: clamp(14px, 3vw, 20px);
   font-family: 'OffBit Trial Regular';
+
 }
 
 .face {
@@ -347,6 +356,7 @@ nav a {
   height: clamp(30px, 4vw, 4vw);
   width: auto;
   mix-blend-mode: difference !important;
+
 }
 
 /* Canvas for trail effect */
@@ -395,6 +405,14 @@ canvas {
     align-items: flex-start;
     gap: 1.5rem;
   }
+
+  .model{
+    visibility: hidden;
+  }
+
+  canvas {
+    visibility: hidden;
+  }
   
   .award-name h1,
   .award-project h1 {
@@ -404,6 +422,7 @@ canvas {
   .award-preview {
     display: none;
   }
+
   
   .face {
     display: flex;
@@ -417,6 +436,7 @@ canvas {
     left: 0;
     transform: none;
     font-family: 'OffBit Trial Regular';
+
   }
   
   /* Adjust form containers for better mobile positioning */
@@ -448,6 +468,7 @@ canvas {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    
   }
   
   nav a {
@@ -472,7 +493,6 @@ canvas {
     margin: 1rem 0;
     font-weight: 600;
     text-decoration: underline;
-    cursor: pointer !important;
   }
   
   /* Adjust footer layout */
@@ -484,11 +504,6 @@ canvas {
 }
 
 @media screen and (max-width: 480px) {
-  /* Mobile optimizations that preserve animations */
-  body {
-    overflow-x: hidden;
-  }
-  
   .award-name,
   .award-project {
     padding: 5px 10px;
