@@ -348,28 +348,74 @@ canvas {
     width: 50%;
     height: 20%;
   }
-  
   .face {
-    flex-direction: row;
-    flex-wrap: wrap;
+    display: flex;
     justify-content: center;
-  }
-  
-  .form-container {
+    align-items: center;
+    width: 100%;
+    flex-direction: row;
+    margin: 2rem 0;
     position: relative;
     top: 0;
     left: 0;
-    right: 0;
     transform: none;
-    width: 90%;
-    margin: 1rem auto;
   }
   
-  .left-cheek, 
-  .right-cheek {
+  /* Adjust form containers for better mobile positioning */
+  .form-container {
+    position: static;
+    width: 80%;
+    max-width: 300px;
+    margin: 0.5rem auto;
+    transform: none;
+  }
+  
+  .left-cheek, .right-cheek {
     position: static;
     transform: none;
+  }
+  
+  /* Stack form elements vertically on mobile */
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
     margin-top: 2rem;
+  }
+  
+  nav {
+    padding: 0.8rem;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  nav a {
+    visibility: hidden;
+
+  }
+  
+  .logo {
+    height: 24px;
+    margin-right: 10px;
+  }
+  
+  /* Make the email address more visible */
+  .email {
+    position: static;
+    text-align: center;
+    margin: 1rem 0;
+    font-weight: 600;
+    text-decoration: underline;
+  }
+  
+  /* Adjust footer layout */
+  .footer {
+    flex-direction: column;
+    padding: 2rem 1rem;
+    gap: 1.5rem;
   }
 }
 
@@ -395,9 +441,15 @@ canvas {
   }
   
   .face {
-    font-size: clamp(60px, 15vw, 100px);
-    gap: 5px;
-    margin: 2rem 0;
+    font-size: clamp(50px, 12vw, 100px);
+  }
+  
+  form {
+    margin-top: 1rem;
+  }
+  
+  .form-container {
+    width: 90%;
   }
   
   .intro {
@@ -405,7 +457,15 @@ canvas {
   }
   
   nav {
-    padding: 1rem;
+    padding: 0.6rem;
+  }
+  
+  nav a {
+    visibility: hidden;
+  }
+  
+  .logo {
+    height: 20px;
   }
 }
 
