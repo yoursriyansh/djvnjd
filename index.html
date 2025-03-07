@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="assets/Picsart_25-03-07_16-01-08-454.png">
     <title>SHUNYA BYTE</title>
     <link rel="stylesheet" href="styles.css" />
     <script src="https://unpkg.com/lenis@1.1.16/dist/lenis.min.js"></script>
@@ -43,7 +44,12 @@
     </section>
     <div class="award-preview"></div>
     <section class="footer" id="footer">
-        <div class="email">shunyabyte@gmail.com</div>
+        <div class="email" id="emailElement">
+            shunyabyte@gmail.com
+            <div class="copy-indicator" id="copyIndicator">Copied!</div>
+          </div>
+          <div class="status-message" id="statusMessage"></div>
+          <textarea id="hiddenInput" readonly></textarea>
         <div class="face">
             <span class="cheek" data-part="cheek-left"> ( </span>
             <span class="eye" data-part="eye-left"> ͡°</span>

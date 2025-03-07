@@ -640,3 +640,93 @@ function throttle(func, limit) {
     }
   };
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  const emailElement = document.getElementById('emailElement');
+  const copyIndicator = document.getElementById('copyIndicator');
+  const statusMessage = document.getElementById('statusMessage');
+  const hiddenInput = document.getElementById('hiddenInput');
+  
+  emailElement.addEventListener('click', function() {
+    // Get the email text content
+    const email = "shunyabyte@gmail.com"; // Hard-coded to ensure correct formatting
+    
+    // Try multiple copy methods for better compatibility
+    copyToClipboard(email);
+  });
+  
+  function copyToClipboard(text) {
+    // Method 1: Modern Clipboard API
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text)
+        .then(copySuccess)
+        .catch(function() {
+          // Fallback to older methods if Clipboard API fails
+          fallbackCopyMethod(text);
+        });
+    } else {
+      // Method 2: document.execCommand('copy') for older browsers
+      fallbackCopyMethod(text);
+    }
+  }
+  
+  function fallbackCopyMethod(text) {
+    try {
+      // Set the hidden input value
+      hiddenInput.value = text;
+      hiddenInput.select();
+      hiddenInput.setSelectionRange(0, 99999); // For mobile devices
+      
+      // Execute copy command
+      const successful = document.execCommand('copy');
+      
+      if (successful) {
+        copySuccess();
+      } else {
+        copyFail("Copy command failed");
+      }
+    } catch (err) {
+      copyFail("Error: " + err);
+    }
+  }
+  
+  function copySuccess() {
+    // Animation for successful copy
+    copyIndicator.style.opacity = '1';
+    copyIndicator.style.transform = 'scale(1)';
+    copyIndicator.textContent = 'Copied!';
+    
+    
+    // Reset animation
+    setTimeout(function() {
+      copyIndicator.style.opacity = '0';
+      copyIndicator.style.transform = 'scale(0.8)';
+      emailElement.style.transform = 'translateY(-2px)';
+      
+      setTimeout(function() {
+        statusMessage.textContent = '';
+      }, 2000);
+    }, 1000);
+  }
+  
+  function copyFail(error) {
+    console.error(error);
+    copyIndicator.style.opacity = '1';
+    copyIndicator.style.transform = 'scale(1)';
+    copyIndicator.textContent = 'Try again';
+    copyIndicator.style.backgroundColor = 'rgba(220, 53, 69, 0.9)';
+    
+    statusMessage.textContent = 'Failed to copy. Please try selecting the email manually.';
+    statusMessage.style.color = '#dc3545';
+    
+    setTimeout(function() {
+      copyIndicator.style.opacity = '0';
+      copyIndicator.style.transform = 'scale(0.8)';
+      copyIndicator.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+      
+      setTimeout(function() {
+        statusMessage.textContent = '';
+      }, 3000);
+    }, 1500);
+  }
+});
