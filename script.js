@@ -731,3 +731,120 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 1500);
   }
 });
+
+// Add this to your script.js file or create a new preloader.js file
+
+document.addEventListener("DOMContentLoaded", function() {
+  // Create preloader elements
+  const preloader = document.createElement('div');
+  preloader.className = 'preloader';
+  
+  const preloaderBg = document.createElement('div');
+  preloaderBg.className = 'preloader-bg';
+  
+  const preloaderContent = document.createElement('div');
+  preloaderContent.className = 'preloader-content';
+  
+  const logoContainer = document.createElement('div');
+  logoContainer.className = 'preloader-logo-container';
+  
+  // Clone your existing logo for the preloader
+  const logo = document.querySelector('.logo').cloneNode(true);
+  logo.className = 'preloader-logo';
+  
+  const progressContainer = document.createElement('div');
+  progressContainer.className = 'preloader-progress-container';
+  
+  const progressBar = document.createElement('div');
+  progressBar.className = 'preloader-progress-bar';
+  
+  // Assemble the preloader structure
+  logoContainer.appendChild(logo);
+  progressContainer.appendChild(progressBar);
+  preloaderContent.appendChild(logoContainer);
+  preloaderContent.appendChild(progressContainer);
+  preloader.appendChild(preloaderBg);
+  preloader.appendChild(preloaderContent);
+  
+  // Add preloader as the first child of body
+  document.body.insertBefore(preloader, document.body.firstChild);
+  
+  // Hide the main content while preloader is active
+  document.querySelectorAll('body > *:not(.preloader)').forEach(el => {
+    el.style.opacity = '0';
+    el.style.visibility = 'hidden';
+  });
+  
+  // Set initial state of preloader background
+  gsap.set(preloaderBg, { y: '0%' });
+  
+  // Set initial state of the logo
+  gsap.set(logo, { scale: 1.5 });
+  
+  // Simulate loading progress
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += Math.random() * 5;
+    if (progress > 100) progress = 100;
+    
+    gsap.to(progressBar, {
+      width: `${progress}%`,
+      duration: 0.3,
+      ease: "power1.out"
+    });
+    
+    if (progress === 100) {
+      clearInterval(interval);
+      completeLoading();
+    }
+  }, 100);
+  
+  // Function to handle the completion of loading
+  function completeLoading() {
+    setTimeout(() => {
+      // Create the exit timeline
+      const tl = gsap.timeline({
+        onComplete: () => {
+          // Remove preloader and show content
+          document.body.removeChild(preloader);
+          document.querySelectorAll('body > *').forEach(el => {
+            el.style.opacity = '1';
+            el.style.visibility = 'visible';
+          });
+          
+          // Dispatch event that preloader is complete
+          document.dispatchEvent(new Event('preloaderComplete'));
+          
+          // Initialize the rest of your site animations
+          if (typeof initSiteAnimations === 'function') {
+            initSiteAnimations();
+          }
+        }
+      });
+      
+      // Add animations to the timeline
+      tl.to(progressBar, {
+        backgroundColor: '#ffffff',
+        duration: 0.3
+      })
+      // Fade out the logo to invisible
+      .to(logo, {
+        opacity: 0,
+        scale: 1,
+        duration: 0.6,
+        ease: "power2.out"
+      }, "+=0.2")
+      // Lift the background from bottom to top
+      .to(preloaderBg, {
+        y: '-100%',
+        duration: 1,
+        ease: "power2.inOut"
+      }, "-=0.3")
+      // Fade out the preloader content
+      .to(preloaderContent, {
+        opacity: 0,
+        duration: 0.5
+      }, "-=0.8");
+    }, 500);
+  }
+});
