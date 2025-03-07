@@ -304,6 +304,7 @@ gsap.ticker.add((time) => {
 gsap.ticker.lagSmoothing(0);
 
 // 3D scene setup with better performance for mobile
+// Find the existing 3D scene setup code
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
   75,
@@ -315,36 +316,49 @@ const camera = new THREE.PerspectiveCamera(
 // Detect if device is mobile for performance adjustments
 const isMobile = window.innerWidth <= 768;
 
-// Lower quality renderer for mobile
-const renderer = new THREE.WebGLRenderer({
-  antialias: !isMobile, // Turn off antialiasing on mobile
-  alpha: true,
-  powerPreference: "low-power" // Better for mobile battery
-});
-renderer.setClearColor(0x000000, 0);
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(isMobile ? 1 : window.devicePixelRatio); // Lower pixel ratio on mobile
-renderer.shadowMap.enabled = !isMobile; // Disable shadows on mobile
-renderer.physicallyCorrectLights = !isMobile; // Disable physically correct lights on mobile
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 2.5;
+// Skip 3D model completely on mobile devices
+if (isMobile) {
+  // Create a simple placeholder or hide the container
+  const modelContainer = document.querySelector(".model");
+  if (modelContainer) {
+    // Either hide the container completely
+    modelContainer.style.display = "none";
+    
+    // Or replace with a static image/element if needed
+    // const placeholderElement = document.createElement("div");
+    // placeholderElement.className = "model-placeholder";
+    // placeholderElement.textContent = "3D Model";
+    // modelContainer.innerHTML = "";
+    // modelContainer.appendChild(placeholderElement);
+  }
+} else {
+  // Only initialize 3D renderer for desktop
+  const renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    alpha: true,
+    powerPreference: "default"
+  });
+  renderer.setClearColor(0x000000, 0);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.shadowMap.enabled = true;
+  renderer.physicallyCorrectLights = true;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 2.5;
 
-const modelContainer = document.querySelector(".model");
-if (modelContainer) {
-  modelContainer.appendChild(renderer.domElement);
-}
+  const modelContainer = document.querySelector(".model");
+  if (modelContainer) {
+    modelContainer.appendChild(renderer.domElement);
+  }
 
-// Simpler lighting for mobile
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
-scene.add(ambientLight);
+  // Lighting setup for desktop only
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+  scene.add(ambientLight);
 
-// Only add main light - reduce light sources for mobile
-const mainLight = new THREE.DirectionalLight(0xffffff, 7.5);
-mainLight.position.set(0.5, 7.5, 2.5);
-scene.add(mainLight);
+  const mainLight = new THREE.DirectionalLight(0xffffff, 7.5);
+  mainLight.position.set(0.5, 7.5, 2.5);
+  scene.add(mainLight);
 
-// Skip additional lights on mobile
-if (!isMobile) {
   const fillLight = new THREE.DirectionalLight(0xffffff, 2.5);
   fillLight.position.set(-15, 0, -5);
   scene.add(fillLight);
@@ -352,116 +366,94 @@ if (!isMobile) {
   const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 1.5);
   hemiLight.position.set(0, 0, 0);
   scene.add(hemiLight);
-}
 
-let animationFrameId;
-function basicAnimate() {
-  animationFrameId = requestAnimationFrame(basicAnimate);
-  renderer.render(scene, camera);
-}
-basicAnimate();
+  // Animation functions only for desktop
+  let animationFrameId;
+  function basicAnimate() {
+    animationFrameId = requestAnimationFrame(basicAnimate);
+    renderer.render(scene, camera);
+  }
+  basicAnimate();
 
-let model;
-const loader = new THREE.GLTFLoader();
-loader.load("./assets/chair.glb", function (gltf) {
-  model = gltf.scene;
-  
-  // Simplify model for mobile
-  model.traverse((node) => {
-    if (node.isMesh) {
-      if (node.material) {
-        // Simplified materials for mobile
-        node.material.metalness = isMobile ? 1 : 2;
-        node.material.roughness = isMobile ? 2 : 3;
-        node.material.envMapIntensity = isMobile ? 3 : 5;
-        
-        // Lower quality settings for mobile
-        if (isMobile && node.material.map) {
-          node.material.map.minFilter = THREE.LinearFilter;
-          node.material.map.magFilter = THREE.LinearFilter;
-          node.material.map.anisotropy = 1;
+  // Load model only on desktop
+  let model;
+  const loader = new THREE.GLTFLoader();
+  loader.load("./assets/chair.glb", function (gltf) {
+    model = gltf.scene;
+    
+    model.traverse((node) => {
+      if (node.isMesh) {
+        if (node.material) {
+          node.material.metalness = 2;
+          node.material.roughness = 3;
+          node.material.envMapIntensity = 5;
         }
+        node.castShadow = true;
+        node.receiveShadow = true;
       }
-      // Disable shadows on mobile for performance
-      node.castShadow = !isMobile;
-      node.receiveShadow = !isMobile;
-    }
+    });
+
+    const box = new THREE.Box3().setFromObject(model);
+    const center = box.getCenter(new THREE.Vector3());
+    model.position.sub(center);
+    scene.add(model);
+
+    const size = box.getSize(new THREE.Vector3());
+    const maxDim = Math.max(size.x, size.y, size.z);
+    camera.position.z = maxDim * 1.75;
+
+    model.scale.set(0, 0, 0);
+    model.rotation.set(0, 0.5, 0);
+    playInitialAnimation();
+
+    cancelAnimationFrame(animationFrameId);
+    animate();
   });
 
-  const box = new THREE.Box3().setFromObject(model);
-  const center = box.getCenter(new THREE.Vector3());
-  model.position.sub(center);
-  scene.add(model);
+  const floatAmplitude = 0.01;
+  const floatSpeed = 1.5; 
+  const rotationSpeed = 0.3;
+  let isFloating = true;
+  let currentScroll = 0;
 
-  const size = box.getSize(new THREE.Vector3());
-  const maxDim = Math.max(size.x, size.y, size.z);
-  camera.position.z = maxDim * 1.75;
+  const totalScrollHeight =
+    document.documentElement.scrollHeight - window.innerHeight;
 
-  model.scale.set(0, 0, 0);
-  model.rotation.set(0, 0.5, 0);
-  playInitialAnimation();
-
-  cancelAnimationFrame(animationFrameId);
-  animate();
-});
-
-const floatAmplitude = isMobile ? 0.005 : 0.01; // Lower amplitude for mobile
-const floatSpeed = isMobile ? 1 : 1.5; // Lower speed for mobile
-const rotationSpeed = isMobile ? 0.2 : 0.3; // Lower rotation speed for mobile
-let isFloating = true;
-let currentScroll = 0;
-
-const totalScrollHeight =
-  document.documentElement.scrollHeight - window.innerHeight;
-
-function playInitialAnimation() {
-  if (model) {
-    gsap.to(model.scale, {
-      x: 1,
-      y: 1,
-      z: 1,
-      duration: 1,
-      ease: "power2.out",
-    });
+  function playInitialAnimation() {
+    if (model) {
+      gsap.to(model.scale, {
+        x: 1,
+        y: 1,
+        z: 1,
+        duration: 1,
+        ease: "power2.out",
+      });
+    }
   }
-}
 
-lenis.on("scroll", (e) => {
-  currentScroll = e.scroll;
-});
+  lenis.on("scroll", (e) => {
+    currentScroll = e.scroll;
+  });
 
-// Optimize animation for better performance
-let lastTime = 0;
-const animateInterval = isMobile ? 50 : 16; // Lower frame rate on mobile (20fps vs 60fps)
+  function animate(time) {
+    if (model) {
+      if (isFloating) {
+        const floatOffset =
+          Math.sin(Date.now() * 0.001 * floatSpeed) * floatAmplitude;
+        model.position.y = floatOffset;
+      }
 
-function animate(time) {
-  // Throttle animation frames on mobile
-  if (isMobile && time - lastTime < animateInterval) {
-    requestAnimationFrame(animate);
-    return;
-  }
-  
-  lastTime = time;
-  
-  if (model) {
-    if (isFloating) {
-      const floatOffset =
-        Math.sin(Date.now() * 0.001 * floatSpeed) * floatAmplitude;
-      model.position.y = floatOffset;
+      const scrollProgress = Math.min(currentScroll / totalScrollHeight, 1);
+      const baseTilt = 0.5;
+      model.rotation.x = scrollProgress * Math.PI * 4 + baseTilt;
     }
 
-    const scrollProgress = Math.min(currentScroll / totalScrollHeight, 1);
-
-    const baseTilt = 0.5;
-    // Reduce complexity of calculations for mobile
-    model.rotation.x = scrollProgress * Math.PI * (isMobile ? 2 : 4) + baseTilt;
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
   }
-
-  renderer.render(scene, camera);
-  requestAnimationFrame(animate);
 }
 
-// lenis scroll - more efficient
+// Keep lenis scroll for both mobile and desktop
 function raf(time) {
   lenis.raf(time)
   requestAnimationFrame(raf)
