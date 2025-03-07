@@ -561,3 +561,36 @@ observer.observe(document.body, {
   attributes: true,
   attributeFilter: ['style', 'class']
 });
+
+
+function sendMail() {
+  emailjs.init("5pyYnjAojxL3llUWT"); // Replace with your actual public key
+
+  let emailInput = document.getElementById("email");
+  let messageInput = document.getElementById("message");
+
+  // Check if input fields exist
+  if (!emailInput || !messageInput) {
+      console.error("Error: Input fields not found.");
+      alert("Error: Email or message input field is missing!");
+      return;
+  }
+
+  let params = {
+      email: emailInput.value,
+      message: messageInput.value,
+  };
+
+  console.log("Sending email with params:", params); // Debugging log
+
+  emailjs.send("service_lc1fegr", "template_h8karxf", params)
+      .then((response) => {
+          console.log("Email sent successfully!", response);
+          alert("Email sent successfully!");
+      })
+      .catch((error) => {
+          console.error("Error sending email:", error);
+          alert("Failed to send email. Check the console for errors.");
+      });
+}
+
