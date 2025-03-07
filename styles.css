@@ -345,66 +345,10 @@ canvas {
   }
   
   .award-preview {
-    width: 50%;
-    height: 20%;
-  }
-
-  .awards {
-    padding-top: 1rem;
-    position: relative;
-    z-index: 10;
-  }
-  
-  .awards p {
-    text-align: left;
-    font-weight: 700;
-    padding: 1rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .award-wrapper {
-    height: 160px;
-    transform: translateY(-80px);
-    overflow: hidden;
-    will-change: transform;
-  }
-  
-  .award {
-    clip-path: none;
-    height: auto;
-  }
-  
-  .award-name, 
-  .award-project {
-    height: 80px;
-    padding: 1rem;
-    align-items: center;
-    display: flex;
-  }
-  
-  .award-name {
-    position: relative;
-  }
-  
-  .award-name::after {
-    content: "+";
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 20px;
-    transition: transform 0.3s ease;
-  }
-  
-  .award-wrapper[data-expanded="true"] .award-name::after {
-    transform: translateY(-50%) rotate(45deg);
-  }
-  
-  /* Hide the award preview on mobile */
-  .award-preview {
     display: none;
   }
 
+  
   .face {
     display: flex;
     justify-content: center;
