@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
       img.style.width = "100%";
       img.style.height = "100%";
       img.style.backgroundColor = getColorForIndex(index);
-      img.style.border = "1px solid #000";
+      img.style.border = "1px solid #0A0A0A";
       img.style.borderRadius = "4px";
       img.style.transform = "scale(0)";
       img.style.zIndex = Date.now();
@@ -391,11 +391,11 @@ function animate() {
 
 // lenis scroll
 function raf(time) {
-  lenis.raf(time);
-  requestAnimationFrame(raf);
+    lenis.raf(time)
+    requestAnimationFrame(raf)
 }
 
-requestAnimationFrame(raf);
+requestAnimationFrame(raf)
 // canvas trail
 // Canvas trail
 const canvas = document.createElement("canvas");
